@@ -42,7 +42,7 @@ router.get("/my-submissions/:teamId", async (req, res) => {
     res.status(500).json({ message: "Server error fetching submissions" });
   }
 });
-
+ 
 // GET: Fetch latest submissions (for dashboard/admin)
 router.get("/latest", async (req, res) => {
   try {
