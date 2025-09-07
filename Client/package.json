@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "bootstrap-icons": "^1.13.1",
+    "mdb-react-ui-kit": "^9.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "proxy": "http://localhost:5000"
+  }
+}
