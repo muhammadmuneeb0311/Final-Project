@@ -49,46 +49,44 @@ const Register = () => {
     }
   };
 
-  // ✅ handle submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const [errorMessage, setErrorMessage] = useState("");
 
-    let payload = { ...user };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setErrorMessage(""); // Clear old errors
 
-    // Clean payload
-    if (user.role !== "team") {
-      delete payload.members;
-      delete payload.teamName;
+  let payload = { ...user };
+
+  // Clean payload based on role
+  if (user.role !== "team") {
+    delete payload.members;
+    delete payload.teamName;
+  }
+  if (user.role !== "evaluator") {
+    delete payload.qualification;
+    delete payload.experience;
+  }
+
+  try {
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("✅ Registration successful:", data);
+      navigate("/login");
+    } else {
+      const errorData = await response.json();
+      setErrorMessage(errorData.message || "Registration failed");
     }
-    if (user.role !== "evaluator") {
-      delete payload.qualification;
-      delete payload.experience;
-    }
+  } catch (error) {
+    setErrorMessage("Something went wrong. Please try again.");
+  }
+};
 
-    console.log("🚀 Payload sending to backend:", payload);
-
-    try {
-      const response = await fetch(URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      console.log("📡 Raw response:", response);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("✅ Registration successful:", data);
-        navigate("/login");
-      } else {
-        const errorData = await response.json();
-        console.error("❌ Registration failed:", errorData);
-        alert(`Error: ${errorData.message || "Registration failed"}`);
-      }
-    } catch (error) {
-      console.error("🔥 Fetch error:", error);
-    }
-  };
 
   return (
     <div className="container mt-5">
