@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 
+
+
+
 const assignmentSchema = new mongoose.Schema({
-  team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
-  submission: { type: mongoose.Schema.Types.ObjectId, ref: "Submission" },
-  evaluator: { type: mongoose.Schema.Types.ObjectId, ref: "Evaluator" },
-  status: { type: String, enum: ["pending", "completed"], default: "pending" }
+  submissionId: { type: mongoose.Schema.Types.ObjectId, ref: "Submission", required: true },
+  evaluatorId: { type: mongoose.Schema.Types.ObjectId, ref: "Evaluator", required: true },
+  assignedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true },
+  assignedDate: { type: Date, default: Date.now },
+  status: { type: String, enum: ["assigned", "completed"], default: "assigned" },
+    teamId: { type: mongoose.Schema.Types.ObjectId, ref: "Team", required: true },
 }, { timestamps: true });
 
-module.exports = mongoose.model("EvaluatorAssignment", assignmentSchema);
+module.exports = mongoose.model("Assignment", assignmentSchema);

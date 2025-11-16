@@ -36,6 +36,7 @@ const signupSchema = z
 
     // only for evaluator
     qualification: z.string().optional(),
+    specialization: z.string().optional(),
     experience: z.string().optional(),
   })
   .refine(
@@ -49,7 +50,7 @@ const signupSchema = z
     },
     {
       message: "Team name and at least one member are required for team role",
-      path: ["members"], // error will show under members
+      path: ["members"], 
     }
   );
 

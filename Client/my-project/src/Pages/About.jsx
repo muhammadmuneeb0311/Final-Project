@@ -1,14 +1,12 @@
 
 import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import HomeHeader from '../Components/HomeHeader';
 
 const About = () => {
   return (
     <>
     
-          {/* Reusable Navbar */}
-          <HomeHeader />
+    
     
  
 

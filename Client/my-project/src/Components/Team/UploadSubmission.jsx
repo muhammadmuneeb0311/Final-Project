@@ -1,17 +1,17 @@
-import { useState, useMemo } from "react";
-import { useAuth } from "../Auth/store";
+import { useState, useMemo, useEffect } from "react";
+import { useAuth } from "../store";
 import { useNavigate } from "react-router-dom";
-import {jwtDecode} from "jwt-decode"; // ✅ Correct import
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
 const UploadSubmission = () => {
-  const { token } = useAuth();
+ const { token, teamId } = useAuth();  
+
+  // decode token once
+  const decoded = useMemo(() => (token ? jwtDecode(token) : {}), [token]);
+  const userId = decoded.id; // logged-in user id
   const navigate = useNavigate();
 
-  // Decode token once
-  const decoded = useMemo(() => (token ? jwtDecode(token) : {}), [token]);
-  const userId = decoded.id; // team user
-  const teamId = userId; // for team, teamId = userId
 
   const [form, setForm] = useState({
     videoLink: "",
@@ -29,6 +29,15 @@ const UploadSubmission = () => {
     });
   }, [token]);
 
+  // UploadSubmission.jsx or Dashboard.jsx
+ const [teamData, setTeamData] = useState({
+  team: null,
+  totalVideos: 0,
+  submissions: []
+});
+
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -43,39 +52,42 @@ const UploadSubmission = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!isValidUrl(form.videoLink)) {
-      setMessage("❌ Please enter a valid video link");
-      return;
-    }
+  if (!isValidUrl(form.videoLink)) {
+    setMessage("❌ Please enter a valid video link");
+    return;
+  }
 
-    setLoading(true);
-    setMessage("");
+  if (!teamId || teamId === 'undefined' || teamId === 'null') {
+    setMessage("❌ No team assigned to your account");
+    return;
+  }
 
-    try {
-      const payload = {
-        title: form.topic,
-        videoUrl: form.videoLink,
-        description: form.description,
-        learningOutcome: form.learningOutcomes,
-        userId,
-        teamId, // same as userId
-      };
+  setLoading(true);
+  setMessage("");
 
-      await axiosInstance.post("/submissions/submit", payload);
-      setMessage("✅ Submission uploaded successfully!");
-      setForm({ videoLink: "", topic: "", description: "", learningOutcomes: "" });
+  try {
+    const payload = {
+      topic: form.topic,
+      videoLink: form.videoLink,
+      description: form.description,
+      learningOutcomes: form.learningOutcomes,
+    };
 
-      setTimeout(() => navigate("/my-submissions"), 1500);
-    } catch (err) {
-      console.error(err);
-      setMessage(`❌ Error: ${err.response?.data?.message || "Network error"}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+    await axiosInstance.post(`/submissions/submit/${teamId}`, payload);
+
+    setMessage("✅ Submission uploaded successfully!");
+    setForm({ videoLink: "", topic: "", description: "", learningOutcomes: "" });
+    setTimeout(() => navigate("/my-submissions"), 1500);
+  } catch (err) {
+    console.error(err);
+    setMessage(`❌ Error: ${err.response?.data?.message || "Network error"}`);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="container mt-5">
@@ -122,25 +134,24 @@ const UploadSubmission = () => {
       </form>
 
       {(form.videoLink.includes("youtube.com") || form.videoLink.includes("youtu.be")) && (
-  <div className="mt-4 text-center">
-    <h5>Video Preview</h5>
-    <iframe
-      width="100%"
-      height="315"
-      src={
-        form.videoLink.includes("watch?v=")
-          ? form.videoLink.replace("watch?v=", "embed/")
-          : form.videoLink.includes("youtu.be/")
-          ? form.videoLink.replace("youtu.be/", "www.youtube.com/embed/")
-          : form.videoLink
-      }
-      title="Video Preview"
-      frameBorder="0"
-      allowFullScreen
-    ></iframe>
-  </div>
-)}
-
+        <div className="mt-4 text-center">
+          <h5>Video Preview</h5>
+          <iframe
+            width="100%"
+            height="315"
+            src={
+              form.videoLink.includes("watch?v=")
+                ? form.videoLink.replace("watch?v=", "embed/")
+                : form.videoLink.includes("youtu.be/")
+                  ? form.videoLink.replace("youtu.be/", "www.youtube.com/embed/")
+                  : form.videoLink
+            }
+            title="Video Preview"
+            frameBorder="0"
+            allowFullScreen
+          ></iframe>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,37 +1,83 @@
 const Submission = require("../Models/Submission");
+const TeamMember = require("../Models/TeamMember");
+const Team = require("../Models/Team");
+const fs = require("fs");
+const path = require("path");
+const ffmpeg = require("fluent-ffmpeg");
 
-// Create a submission
-const createSubmission = async (req, res) => {
+// Upload Submission (TeamMember -> teamId)
+
+const uploadSubmission = async (req, res) => {
   try {
+    const { topic, videoLink, description, learningOutcomes } = req.body;
+    const { id } = req.params;
+
+    if (!topic || !videoLink || !description || !learningOutcomes) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    let teamId;
+
+    // find team or team member
+    const team = await Team.findById(id);
+    if (team) {
+      teamId = team._id;
+    } else {
+      const member = await TeamMember.findById(id);
+      if (!member) {
+        return res.status(404).json({ message: "Team or Team Member not found" });
+      }
+      teamId = member.teamId;
+    }
+
+    // ✅ directly save (skip video file check)
     const submission = new Submission({
-      team: req.user.id,
-      fileUrl: req.body.fileUrl,
+      topic,
+      videoLink, // external URL
+      description,
+      learningOutcomes,
+      teamId,
+       status: "submitted",
     });
+
     await submission.save();
-    res.json(submission);
+    res.status(201).json({ message: "Submission uploaded successfully", submission });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Submission Error:", err);
+    res.status(500).json({ message: "Server error while uploading submission" });
   }
 };
 
-// Get my submissions
-const getMySubmissions = async (req, res) => {
+
+
+
+// ✅ Get all submissions for a team
+const getTeamSubmissions = async (req, res) => {
   try {
-    const submissions = await Submission.find({ team: req.user.id });
+    const { teamId } = req.params;
+    const submissions = await Submission.find({ teamId });
+    res.json({ submissions, totalVideos: submissions.length });
+  } catch (err) {
+    console.error("Error fetching team submissions:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ✅ Latest submissions (for admin)
+const getLatestSubmissions = async (req, res) => {
+  try {
+    const submissions = await Submission.find()
+      .sort({ createdAt: -1 })
+      .populate("teamId", "teamName"); // uploader is team
     res.json(submissions);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Fetch Latest Submissions Error:", err);
+    res.status(500).json({ message: "Server error while fetching submissions" });
   }
 };
 
-// Get latest submission
-const getLatestSubmission = async (req, res) => {
-  try {
-    const latest = await Submission.findOne().sort({ createdAt: -1 });
-    res.json(latest);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+module.exports = {
+  uploadSubmission,
+  getTeamSubmissions,
+  getLatestSubmissions,
 };
-
-module.exports = { createSubmission, getMySubmissions, getLatestSubmission };

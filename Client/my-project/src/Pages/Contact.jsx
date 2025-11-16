@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";   // ✅ Missing import added
-import HomeHeader from "../Components/HomeHeader";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -24,10 +22,9 @@ const Contact = () => {
 
   return (
     <>
-      {/* ✅ Reusable Navbar */}
-      <HomeHeader />
+   
 
-      {/* ✅ Hero Section */}
+      {/*  Hero Section */}
       <section className="bg-primary text-white py-5">
         <Container>
           <div className="text-center py-5">
@@ -42,7 +39,7 @@ const Contact = () => {
         </Container>
       </section>
 
-      {/* ✅ Contact Section */}
+      {/*  Contact Section */}
       <Container className="my-5">
     
 

@@ -1,17 +1,31 @@
-const express = require ("express");
+const express = require("express");
 const router = express.Router();
 
-const {home} = require("../controllers/auth-controllers");
-const {register,login} = require("../controllers/auth-controllers");
+const {
+  
+  register,
+  login,
+  activateAccount,forgotPassword, resetPassword
+} = require("../controllers/auth-controllers");
+
 const { signupSchema } = require("../validators/auth-validators");
-const  validate  = require("../middleware/validate");
+const validate = require("../middleware/validate");
 
-router.route("/home").get(home);
+
+
+// Register with validation
 router.route("/register").post(validate(signupSchema), register);
+
+// Login route
 router.route("/login").post(login);
-module.exports = router; 
+
+// Account activation route (no validation assumed here, can add if you want)
+router.route("/activate").post(activateAccount);
 
 
 
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
 
 
+module.exports = router;

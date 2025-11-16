@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "./store";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../store";
+import {jwtDecode} from "jwt-decode"; 
+import axios from "axios";
 
 const URL = "http://localhost:5000/api/auth/login";
 
@@ -13,75 +14,63 @@ const Login = () => {
   const { saveToken, token, userRole } = useAuth();
   const navigate = useNavigate();
 
-  // ✅ Helper: redirect by role
+  // 🔹 Redirect based on role
   const redirectByRole = useCallback(
     (role) => {
-      if (!role) {
-        navigate("/login");
-        return;
-      }
-      switch (role) {
+      switch (role.toLowerCase()) { // normalize role
         case "admin":
-          navigate("/dashboard");
-          break;
         case "evaluator":
-          navigate("/dashboard");
-          break;
         case "team":
-          navigate("/dashboard");
+        case "teammember":
+          navigate("/dashboard", { replace: true });
           break;
         default:
-          navigate("/login");
+          navigate("/login", { replace: true });
       }
     },
     [navigate]
   );
 
-  // ✅ Auto-redirect if already logged in
+  // 🔹 Auto-redirect if already logged in
   useEffect(() => {
     if (token && userRole) {
       redirectByRole(userRole);
     }
   }, [token, userRole, redirectByRole]);
 
-  // ✅ Input handler
+  // 🔹 Input handler
   const handleInput = (e) => {
     const { name, value } = e.target;
     setTeam((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Form submit
+  // 🔹 Form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      const response = await fetch(URL, {
-        method: "POST",
+      const { data } = await axios.post(URL, team, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(team),
       });
 
-      const data = await response.json();
-      console.log("Login response:", data);
-
-      if (response.ok && data.token) {
+      if (data.token) {
         const decoded = jwtDecode(data.token);
-        console.log("Decoded JWT 👉", decoded);
+        const role = decoded.role?.toLowerCase() || "member";
+        const teamIdFromToken = decoded.teamId || null;
 
-        const role = decoded.role || "team"; // fallback role
+        // Save token + role
+        saveToken(data.token, role, teamIdFromToken);
 
-        // ✅ Save token + role in context + localStorage
-        saveToken(data.token, role);
-
-        // ✅ Immediately redirect
+        // 🔹 Redirect immediately
         redirectByRole(role);
       } else {
-        setError(data.message || "Login failed");
+        setError(data.msg || "Login failed");
       }
     } catch (err) {
-      setError("Network error");
+      setError(err.response?.data?.msg || "Network error");
+      console.error(err.response?.data || err);
     }
 
     setLoading(false);
@@ -119,10 +108,19 @@ const Login = () => {
                   required
                 />
               </div>
+
+              {/* 🔹 Forgot Password Link */}
+              <div className="mb-3 text-end">
+                <Link to="/forgot-password" className="text-decoration-none">
+                  Forgot Password?
+                </Link>
+              </div>
+
               <button type="submit" className="btn btn-primary w-100" disabled={loading}>
                 {loading ? "Logging in..." : "Login"}
               </button>
             </form>
+
             <p className="text-center mt-3">
               Don’t have an account?{" "}
               <Link to="/register" className="text-decoration-none">

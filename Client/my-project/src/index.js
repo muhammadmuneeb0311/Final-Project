@@ -6,7 +6,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './Components/Auth/store'; // ✅ Auth Context
+import { AuthProvider } from './Components/store'; // ✅ Auth Context
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

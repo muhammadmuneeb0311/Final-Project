@@ -11,3 +11,108 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Theme variables */
+:root{
+  --brand-1: #0d6efd; /* Bootstrap primary */
+  --brand-2: #6f42c1; /* accent */
+  --bg-soft: #f4f7fb;
+  --card-bg: #ffffff;
+  --muted: #6c757d;
+}
+
+/* Main app background and container adjustments */
+main {
+  background: linear-gradient(180deg, rgba(13,110,253,0.03), rgba(111,66,193,0.02));
+  padding: 2.5rem 1rem;
+}
+
+.app-container {
+  /* keep full width to preserve original layout — do not constrain to centered container */
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 1rem;
+}
+
+/* Brand / nav enhancements */
+.brand-gradient{
+  background: linear-gradient(90deg,var(--brand-1),var(--brand-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.navbar-custom{
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Cards and panels */
+.fancy-card{
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(33,37,41,0.06);
+  padding: 1.25rem;
+}
+
+.hero{
+  padding: 3rem 1rem;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(13,110,253,0.08), rgba(111,66,193,0.04));
+  margin-bottom: 1.5rem;
+}
+
+.btn-accent{
+  background: var(--brand-2);
+  border: none;
+  color: #fff;
+}
+
+.muted-small{ color: var(--muted); font-size: .9rem }
+
+/* Responsive tweaks */
+@media (max-width: 768px){
+  .app-container{ padding: 0 0.75rem }
+  .hero{ padding: 2rem }
+}
+
+/* Sidebar styles */
+.admin-sidebar{
+  width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1020;
+  background: linear-gradient(180deg, rgba(33,37,41,0.98), rgba(44,47,51,0.98));
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.admin-sidebar .sidebar-inner{
+  flex: 1 1 auto;
+}
+.admin-sidebar .sidebar-title{
+  color: #ffd166;
+  font-weight: 700;
+}
+.admin-sidebar .nav-link{
+  color: rgba(255,255,255,0.9);
+  padding: .6rem .75rem;
+  border-radius: 8px;
+  margin-bottom: .25rem;
+}
+.admin-sidebar .nav-link:hover{
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  transform: translateX(4px);
+}
+.admin-sidebar .nav-link:active, .admin-sidebar .nav-link.active{
+  background: linear-gradient(90deg,var(--brand-1),var(--brand-2));
+  color: #fff;
+}
+
+/* Offcanvas menu link spacing */
+.offcanvas-body .nav-link{ padding: .5rem 0 }

@@ -1,19 +1,17 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "./Auth/store";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "./store";
+import {jwtDecode} from "jwt-decode";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { token } = useAuth();
 
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!token) return <Navigate to="/login" replace />;
 
   try {
     const decoded = jwtDecode(token);
-    console.log("Decoded in Protected 👉", decoded);
+    const role = decoded.role?.toLowerCase();
 
-    if (allowedRoles && !allowedRoles.includes(decoded.role)) {
+    if (!role || (allowedRoles && !allowedRoles.includes(role))) {
       console.warn("Access denied 🚫", decoded.role);
       return <Navigate to="/" replace />;
     }

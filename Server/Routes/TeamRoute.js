@@ -1,25 +1,32 @@
 const express = require("express");
 const router = express.Router();
-const Submission = require("../Models/Submission");
+const { getPendingMembers, approveMember,getMemberTeamName } = require("../controllers/team-controller");
+const { authMiddleware } = require("../middleware/authMiddleware");
+const Team = require("../Models/Team");
 
-// GET submissions for a specific team
-router.get("/my-submissions/:teamId", async (req, res) => {
-  const { teamId } = req.params;
 
+console.log("✅ TeamRoute.js loaded");
+
+
+// routes/teamRoute.js
+router.get("/pending-members/:teamId",authMiddleware, getPendingMembers);
+
+
+// Approve member
+router.put("/member/approve/:memberId", authMiddleware, approveMember);
+
+
+router.get("/by-member/:id", authMiddleware, getMemberTeamName);
+
+// ===== New route: Get team by ID =====
+router.get("/:teamId", authMiddleware, async (req, res) => {
   try {
-    const submissions = await Submission.find({ team: teamId })
-      .populate("user", "name email")  // Populate uploader's info
-      .sort({ createdAt: -1 });       // Optional: latest first
-
-    res.json({
-      teamId,
-      totalVideos: submissions.length,
-      submissions,
-    });
+    const team = await Team.findById(req.params.teamId);
+    if (!team) return res.status(404).json({ msg: "Team not found" });
+    res.json(team);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: "Server error fetching team submissions" });
+    res.status(500).json({ msg: "Server error" });
   }
 });
-
 module.exports = router;

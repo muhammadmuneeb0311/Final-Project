@@ -1,29 +1,56 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  name: { type: String, required: true, trim: true },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   password: { type: String, required: true },
-  role: { 
-    type: String, 
-    enum: ["admin", "evaluator", "team"], 
-    default: "team" 
-  },
-  is_approved: { type: Boolean, default: false },
-  team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" }
-});
+  phone: { type: String, default: null },
+  role: {
+    type: String,
+    required: true,
+    enum: ["evaluator", "team"],
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
 
-// Hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
+    trim: true
+  },
+  teamName: { type: String, default: null },
+  // members should be an array of subdocuments with name and email
+  members: [
+    {
+      name: { type: String, required: true },
+      email: { type: String, required: true },
+      isApproved: { type: Boolean, default: false },
+      teamId: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
+    },
+  ],
+  qualification: { type: String, default: null },
+  specialization: { type: String, default: null },
+  experience: { type: String, default: null },
+  isApproved: { type: Boolean, default: false },
+  activationToken: { type: String, default: null }
+}, { timestamps: true });
+
+// Pre‑validate hook
+userSchema.pre('validate', function (next) {
+  if (this.role === "evaluator") {
+    if (!this.qualification || !this.specialization || !this.experience) {
+      this.invalidate("qualification", "Qualification, specialization, and experience are required for evaluators");
+    }
+  } else if (this.role === "team") {
+    // Role is "team"
+    if (this.qualification || this.specialization || this.experience) {
+      this.invalidate("qualification", "Qualification, specialization, and experience are only for evaluators");
+    }
+    if (!this.teamName) {
+      this.invalidate("teamName", "Team name is required for team role");
+    }
+    if (!this.members || !this.members.length) {
+      this.invalidate("members", "At least one team member is required for team role");
+    }
+  }
   next();
 });
 
-// Compare password
-userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-module.exports = mongoose.models.User || mongoose.model("User", userSchema);
+// Avoid OverwriteModelError
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);
