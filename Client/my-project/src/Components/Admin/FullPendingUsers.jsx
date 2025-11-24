@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../store';
 import axios from 'axios';
-import AdminSidebar from './AdminSidebar';
+import RoleBasedSidebar from "../RoleBasedSidebar";
 
 const FullPendingUsers = () => {
   const { token } = useAuth();
@@ -43,7 +43,7 @@ const FullPendingUsers = () => {
 
   return (
     <div className="d-flex">
-      <AdminSidebar />
+      <RoleBasedSidebar />
       <main className="flex-grow-1 p-4">
         <h2 className="mb-4">All Pending Users</h2>
         <div className="card">

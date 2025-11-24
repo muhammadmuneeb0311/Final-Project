@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import AdminSidebar from "./AdminSidebar";
-
+import RoleBasedSidebar from "../RoleBasedSidebar";
 
 const EvaluationManagement = () => {
   const [criteria, setCriteria] = useState([]);
@@ -84,7 +83,7 @@ const handleAdd = async (e) => {
 
   return (
     <div className="d-flex">
-      <AdminSidebar /> {/* ✅ Sidebar added */}
+      <RoleBasedSidebar /> {/* ✅ Sidebar added */}
 
       <div className="container mt-4">
         <h3 className="mb-4">Evaluation Criteria Management</h3>

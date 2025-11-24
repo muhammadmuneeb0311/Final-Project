@@ -1,8 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../store";
 import axios from "axios";
-import ResultBoard from "../ResultBoard";
 
 
 
@@ -44,35 +43,8 @@ const EvaluatorDashboard = () => {
 
   return (
     <div className="d-flex">
-      {/* Sidebar */}
-<aside className="bg-dark text-white vh-100 p-3" style={{ width: "220px", overflowY: "auto" }}>
-  <h5 className="text-uppercase">📂 Menu</h5>
-  <ul className="nav flex-column mb-4">
-    <li className="nav-item">
-      <Link className="nav-link text-white" to="/dashboard">📊 Dashboard Overview</Link>
-    </li>
-    <li className="nav-item">
-      <Link className="nav-link text-white" to="/assigned-teams">👥 Assigned Teams</Link>
-    </li>
-    <li className="nav-item">
-      <Link className="nav-link text-white" to="/evaluate">📝 Evaluate Submissions</Link>
-    </li>
-    <li className="nav-item">
-      <Link className="nav-link text-white" to="/progress">📈 Progress Report</Link>
-    </li>
-    <li className="nav-item">
-      <Link className="nav-link text-white" to="/chat">💬 Chat/Support</Link>
-    </li>
-    <li className="nav-item">
-  <Link className="nav-link text-white" to="/admin/results">🏆 Result Board</Link>
-</li>
 
-  </ul>
-
-
-
-</aside>
-
+    
 
       {/* Main Content */}
   <main className="flex-grow-1 p-4">

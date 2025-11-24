@@ -41,12 +41,12 @@ const approveUser = async (req, res) => {
 
     let finalUser;
 
-    // 2️⃣ Create in relevant collection
+    // 2️⃣ Handle evaluator approval
     if (pendingUser.role === "evaluator") {
       finalUser = new Evaluator({
         name: pendingUser.name,
         email: pendingUser.email,
-        phone: pendingUser.phone || "0000000000",
+        phone: pendingUser.phone || "",
         password: pendingUser.password || "temp1234",
         qualification: pendingUser.qualification || "",
         specialization: pendingUser.specialization || "",
@@ -54,13 +54,11 @@ const approveUser = async (req, res) => {
         isApproved: true,
       });
       await finalUser.save();
-
-  // Reload the saved team to ensure embedded members have teamId set by pre-save hook
-  finalUser = await Team.findById(finalUser._id);
+      // No need to load Team here
     }
 
+    // 3️⃣ Handle team approval
     if (pendingUser.role === "team") {
-      // Only include members, exclude evaluators array entirely
       finalUser = new Team({
         name: pendingUser.name,
         email: pendingUser.email,
@@ -80,7 +78,7 @@ const approveUser = async (req, res) => {
 
       await finalUser.save();
 
-      // 3️⃣ Create TeamMember documents
+      // 4️⃣ Create TeamMember documents
       if (Array.isArray(pendingUser.members)) {
         for (const member of pendingUser.members) {
           const activationToken = crypto.randomBytes(32).toString("hex");
@@ -98,10 +96,10 @@ const approveUser = async (req, res) => {
       }
     }
 
-    // 4️⃣ Delete pending user
+    // 5️⃣ Delete pending user
     await pendingUser.deleteOne();
 
-    // Remove empty arrays before sending response (optional)
+    // 6️⃣ Clean empty arrays before sending response
     const responseUser = finalUser.toObject();
     if (responseUser.evaluators?.length === 0) delete responseUser.evaluators;
     if (responseUser.members?.length === 0) delete responseUser.members;
@@ -115,6 +113,7 @@ const approveUser = async (req, res) => {
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
+
 
 
 // ✅ Get Approved Evaluators

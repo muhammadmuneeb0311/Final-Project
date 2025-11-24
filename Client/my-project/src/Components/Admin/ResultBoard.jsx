@@ -1,76 +1,79 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../store";
 
-
-
 const ResultBoard = () => {
-  const { token } = useAuth(); // ✅ use AuthContext
+  const { token } = useAuth(); // Auth token from context
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [publishing, setPublishing] = useState(false);
-
-const fetchResults = () => {
+const role=localStorage.getItem("role");
+  // Fetch all published results
+// Fetch all published results
+const fetchResults = async () => {
   setLoading(true);
-  fetch("http://localhost:5000/api/admin/result/published", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}` // if route is protected
-    }
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.success) {
-        setResults(data.results); // <-- must be the array of results
-      } else {
-        setResults([]);
-      }
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error("Error fetching results:", err);
-      setResults([]);
-      setLoading(false);
+  try {
+    const res = await fetch("http://localhost:5000/api/admin/result/published", {  // Removed /result
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
+    const data = await res.json();
+    if (data.success) setResults(data.results);
+    else setResults([]);
+  } catch (err) {
+    console.error("Error fetching results:", err);
+    setResults([]);
+  } finally {
+    setLoading(false);
+  }
 };
 
-
-  const publishResults = () => {
-    setPublishing(true);
-    fetch("http://localhost:5000/api/admin/result/publish", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // ✅ attach token
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Results published:", data);
-        fetchResults();
-        setPublishing(false);
-      })
-      .catch((err) => {
-        console.error("Error publishing results:", err);
-        setPublishing(false);
-      });
-  };
+// Calculate & publish results
+const calculateAndPublish = async () => {
+  setPublishing(true);
+  try {
+    const res = await fetch(
+      "http://localhost:5000/api/admin/result/calculate-publish",  // Removed /result
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = await res.json();
+    if (data.success) setResults(data.results);
+    else console.error("Publish failed:", data.message);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setPublishing(false);
+  }
+};
 
   useEffect(() => {
     fetchResults();
-  }, [token]); // ✅ refetch if token changes
+  }, [token]);
 
   if (loading) return <div>Loading results...</div>;
 
   return (
     <div className="container mt-4">
       <h2>Published Results</h2>
-      <button
-        className="btn btn-primary mb-3"
-        onClick={publishResults}
-        disabled={publishing}
-      >
-        {publishing ? "Publishing..." : "Publish Results"}
-      </button>
+     {role === "admin" && (
+  <button
+    className="btn btn-primary mb-3"
+    onClick={calculateAndPublish}
+    disabled={publishing}
+  >
+    {publishing ? "Publishing..." : "Publish Results"}
+  </button>
+)}
+
+
+
       <table className="table table-striped">
         <thead>
           <tr>
@@ -86,7 +89,7 @@ const fetchResults = () => {
               .map((result, index) => (
                 <tr key={result._id || index}>
                   <td>{index + 1}</td>
-                  <td>{result.teamId?.teamName || "N/A"}</td>
+                  <td>{result.team?.name || "N/A"}</td>
                   <td>{result.averageScore.toFixed(2)}</td>
                 </tr>
               ))
@@ -100,4 +103,5 @@ const fetchResults = () => {
     </div>
   );
 };
+
 export default ResultBoard;

@@ -21,16 +21,16 @@ const assignEvaluators = async (req, res) => {
     }
 
     
-  // 1️⃣ Fetch approved evaluators
-const evaluators = await User.find({ role: "evaluator", isApproved: true });
+// 1️⃣ Fetch approved evaluators from Evaluator collection
+const evaluators = await Evaluator.find({ isApproved: true });
 if (evaluators.length < 3) {
   return res.status(400).json({ message: "Not enough approved evaluators" });
 }
 
 
     // 2️⃣ Pick 3 randomly
-    const shuffled = evaluators.sort(() => 0.5 - Math.random());
-    const assigned = shuffled.slice(0, 3);
+const shuffled = evaluators.sort(() => 0.5 - Math.random());
+const assigned = shuffled.slice(0, 3);
 
     // 3️⃣ Update team evaluators (optional)
     const team = await Team.findById(teamId);

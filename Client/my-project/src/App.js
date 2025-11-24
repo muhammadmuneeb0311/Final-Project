@@ -20,12 +20,12 @@ import EvaluationManagement from "./Components/Admin/EvaluationManagement";
 import FullPendingUsers from "./Components/Admin/FullPendingUsers";
 import FullEvaluators from "./Components/Admin/FullEvaluators";
 import FullSubmissions from "./Components/Admin/FullSubmissions";
-import Results from "./Components/ResultBoard";
+import Results from "./Components/Admin/ResultBoard";
 import SupportChat from "./Components/SupportChat";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import ResetPassword from "./Components/Auth/ResetPassword";
-
-
+import RoleBasedSidebar from "./Components/RoleBasedSidebar";
+import RoleBasedDashboard from "./Components/RoleBasedDashboard";
 
 function App() {
   const { userRole } = useAuth();
@@ -169,6 +169,26 @@ function App() {
   }
 />
 
+<Route
+  path="/RoleBasedSidebar"
+  element={
+    <ProtectedRoute allowedRoles={["admin", "evaluator", "team", "teammember"]}>
+      <Layout role={userRole}>
+        <SupportChat />
+      </Layout>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/RoleBasedDashboard"
+  element={
+    <ProtectedRoute allowedRoles={["admin", "evaluator", "team", "teammember"]}>
+      <Layout role={userRole}>
+        <RoleBasedDashboard />
+      </Layout>
+    </ProtectedRoute>
+  }
+/>
 
       {/* Fallback route */}
       <Route path="/*" element={<Login />} />

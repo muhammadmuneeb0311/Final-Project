@@ -9,6 +9,7 @@ const supportMessageSchema = new mongoose.Schema({
   is_read: { type: Boolean, default: false },
   sender_type: { type: String, enum: ["admin", "team", "teammember"], required: true },
   sender_name: { type: String, required: true },
+  sender_role: { type: String, required: true },
 });
 
 module.exports = mongoose.model('SupportMessage', supportMessageSchema, 'support_messages');

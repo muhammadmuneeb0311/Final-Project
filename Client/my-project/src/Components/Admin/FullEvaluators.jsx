@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../store';
 import axios from 'axios';
-import AdminSidebar from './AdminSidebar';
+import RoleBasedSidebar from "../RoleBasedSidebar";
 
 const FullEvaluators = () => {
   const { token } = useAuth();
@@ -30,7 +30,7 @@ const FullEvaluators = () => {
 
   return (
     <div className="d-flex">
-      <AdminSidebar />
+      <RoleBasedSidebar />
       <main className="flex-grow-1 p-4">
         <h2 className="mb-4">Approved Evaluators</h2>
         <div className="card">

@@ -1,8 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../store";
 import axios from "axios";
-import Leaderboard from "../ResultBoard";
+
 
 const TeamDashboard = () => {
   const { token, teamId: contextTeamId } = useAuth();
@@ -74,17 +73,8 @@ const TeamDashboard = () => {
 
   return (
     <div className="d-flex">
-      {/* Sidebar */}
-      <aside className="bg-dark text-white vh-100 p-3" style={{ width: "220px" }}>
-        <h5 className="text-uppercase">📂 Menu</h5>
-        <ul className="nav flex-column">
-          <li className="nav-item"><Link className="nav-link text-white" to="/dashboard">📊 Dashboard Overview</Link></li>
-          <li className="nav-item"><Link className="nav-link text-white" to="/upload">📂 Upload Submission</Link></li>
-          <li className="nav-item"><Link className="nav-link text-white" to="/scores">⭐ My Scores</Link></li>
-          <li className="nav-item"><Link className="nav-link text-white" to="/admin/Results">🏆 Result Board</Link></li>
-          <li className="nav-item"><Link className="nav-link text-white" to="/support">💬 Chat/Support</Link></li>
-        </ul>
-      </aside>
+    
+
 
       {/* Main Content */}
       <main className="flex-grow-1 p-4">

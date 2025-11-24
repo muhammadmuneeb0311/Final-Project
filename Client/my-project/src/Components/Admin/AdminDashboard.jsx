@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../store";
 import axios from "axios";
-import AdminSidebar from "./AdminSidebar";
-import ResultBoard from "../ResultBoard";
+import RoleBasedSidebar from "../RoleBasedSidebar";
+
 
 const AdminDashboard = () => {
   const { token } = useAuth();
@@ -80,8 +80,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="d-flex">
-      {/* ✅ Reusable Sidebar */}
-      <AdminSidebar />
+ 
 
       {/* ✅ Main Content */}
       <main className="flex-grow-1 p-4">
