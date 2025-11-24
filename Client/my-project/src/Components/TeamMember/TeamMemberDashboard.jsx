@@ -170,7 +170,7 @@ const TeamMemberDashboard = () => {
                         <h6 className="text-muted mb-3">Performance Score</h6>
                         <div className="text-center">
                           <div className="position-relative d-inline-block">
-                            <div className="bg-primary bg-opacity-10 rounded-circle p-4">
+                            <div className="bg-primary bg-opacity-10 rounded-circle py-2 px-4 w-full">
                               <h2 className="fw-bold text-primary mb-0">{teamData.currentScore}</h2>
                               <small className="text-muted">/ {teamData.maxScore}</small>
                             </div>

@@ -76,6 +76,8 @@ const AdminDashboard = () => {
       alert(err.response?.data?.msg || "Error approving user");
     }
   };
+console.log(latestSubmissions);
+const allEvaluated=latestSubmissions.filter(s=>s.status==="evaluated").length;
 
 
   return (
@@ -93,7 +95,8 @@ const AdminDashboard = () => {
               <div className="card text-center shadow-sm">
                 <div className="card-body">
                   <h5>{title}</h5>
-                  <h3>{Object.values(data)[i]}</h3>
+                  {title==="Evaluations Completed" ? <h3>{allEvaluated}</h3> :
+                  <h3>{Object.values(data)[i]}</h3>}
                 </div>
               </div>
             </div>
@@ -205,7 +208,7 @@ const AdminDashboard = () => {
               </thead>
               <tbody>
                 {latestSubmissions.length > 0 ? (
-                  latestSubmissions.slice(0,5).map((s) => (
+                  latestSubmissions.slice(0,15).map((s) => (
                     <tr key={s._id}>
                       <td>{s.teamId?.teamName || "N/A"}</td>
                       <td>{s.topic || "Untitled"}</td>

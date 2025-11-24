@@ -440,7 +440,7 @@ const Register = () => {
                       variant="primary"
                       size="lg"
                       disabled={loading}
-                      className="w-100 py-3 fw-semibold fs-5"
+                      className="w-100 py-2 fw-semibold fs-5"
                     >
                       {loading ? (
                         <>

@@ -169,7 +169,7 @@ const Login = () => {
                     </Form.Group>
 
                     {/* Remember Me & Forgot Password */}
-                    <div className="d-flex justify-content-between align-items-center mb-4">
+                    <div className="d-flex justify-content-between align-items-center mb-2">
                       <Form.Check
                         type="checkbox"
                         id="remember-me"
@@ -191,7 +191,7 @@ const Login = () => {
                       variant="primary"
                       size="lg"
                       disabled={loading}
-                      className="w-100 py-3 fw-semibold fs-5"
+                      className="w-100 py-2 fw-semibold fs-5"
                     >
                       {loading ? (
                         <>
@@ -214,26 +214,12 @@ const Login = () => {
                     </Button>
                   </Form>
 
-                  {/* Divider */}
-                  <div className="text-center my-4">
-                    <div className="bg-light" style={{height: '1px'}}></div>
-                    <span className="bg-white px-3 text-muted small">or continue with</span>
-                  </div>
+  
 
-                  {/* Social Login Options */}
-                  <div className="d-grid gap-2 mb-4">
-                    <Button variant="outline-dark" size="lg" className="py-2">
-                      <i className="bi bi-google me-2"></i>
-                      Continue with Google
-                    </Button>
-                    <Button variant="outline-primary" size="lg" className="py-2">
-                      <i className="bi bi-microsoft me-2"></i>
-                      Continue with Microsoft
-                    </Button>
-                  </div>
+             
 
                   {/* Registration Link */}
-                  <div className="text-center">
+                  <div className="text-center mt-2">
                     <p className="text-muted mb-0">
                       Don't have an account?{" "}
                       <Link 

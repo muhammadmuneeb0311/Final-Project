@@ -313,7 +313,7 @@ const SupportChat = () => {
                 <InputGroup>
                   <Form.Control
                     as="textarea"
-                    rows={2}
+                    rows={1}
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                     onKeyPress={handleKeyPress}
