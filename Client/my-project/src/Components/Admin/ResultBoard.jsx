@@ -56,7 +56,10 @@ const calculateAndPublish = async () => {
   useEffect(() => {
     fetchResults();
   }, [token]);
-
+useEffect(()=>{
+  console.log(results);
+  
+},[results])
   if (loading) return <div>Loading results...</div>;
 
   return (
@@ -89,7 +92,7 @@ const calculateAndPublish = async () => {
               .map((result, index) => (
                 <tr key={result._id || index}>
                   <td>{index + 1}</td>
-                  <td>{result.team?.name || "N/A"}</td>
+                  <td>{result.teamId?.teamName || "N/A"}</td>
                   <td>{result.averageScore.toFixed(2)}</td>
                 </tr>
               ))

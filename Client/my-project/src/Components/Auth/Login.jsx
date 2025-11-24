@@ -137,7 +137,7 @@ const Login = () => {
                         placeholder="Enter your email"
                         required
                         size="lg"
-                        className="py-3 border-2"
+                        className="py-2 border-2"
                       />
                     </Form.Group>
 
@@ -156,7 +156,7 @@ const Login = () => {
                           placeholder="Enter your password"
                           required
                           size="lg"
-                          className="py-3 border-2 pe-5"
+                          className="py-2 border-2 pe-5"
                         />
                         <Button
                           variant="link"

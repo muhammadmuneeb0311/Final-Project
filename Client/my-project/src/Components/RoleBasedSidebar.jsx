@@ -7,10 +7,7 @@ const RoleBasedSidebar = ({ role }) => {
   // Define menu items for each role
   const menus = {
     admin: [
-      { to: "/RoleBasedDashboard", label: "Dashboard Overview", icon: "bi bi-speedometer2" },
-
       { to: "/evaluators", label: "Evaluator Management", icon: "bi bi-person-badge" },
-      { to: "/submissions", label: "Submissions", icon: "bi bi-folder-fill" },
       { to: "/admin/evaluation-management", label: "Evaluation Management", icon: "bi bi-clipboard-check" },
 
       { to: "/admin/results", label: "Results", icon: "bi bi-file-text" },
@@ -20,21 +17,17 @@ const RoleBasedSidebar = ({ role }) => {
       { to: "/admin/competition-settings", label: "Competition Settings", icon: "bi bi-award" },
     ],
     evaluator: [
-      { to: "/RoleBasedDashboard", label: "Dashboard Overview", icon: "bi bi-speedometer2" },
       { to: "/assigned-teams", label: "Assigned Teams", icon: "bi bi-people" },
       { to: "/evaluate", label: "Evaluate Submissions", icon: "bi bi-pencil-square" },
-      { to: "/progress", label: "Progress Report", icon: "bi bi-bar-chart" },
       { to: "/admin/results", label: "Result Board", icon: "bi bi-trophy" },
     ],
     team: [
-      { to: "/RoleBasedDashboard", label: "Dashboard Overview", icon: "bi bi-speedometer2" },
       { to: "/upload", label: "Upload Submission", icon: "bi bi-cloud-upload" },
 
       { to: "/admin/results", label: "Result Board", icon: "bi bi-trophy" },
       { to: "/support", label: "Chat/Support", icon: "bi bi-chat" },
     ],
     teammember: [
-      { to: "/RoleBasedDashboard", label: "Dashboard Overview", icon: "bi bi-speedometer2" },
       { to: "/member/team-info", label: "Team Information", icon: "bi bi-info-circle" },
       { to: "/upload", label: "Make Submission", icon: "bi bi-cloud-upload" },
       { to: "/support", label: "Chat / Support", icon: "bi bi-chat-left" },

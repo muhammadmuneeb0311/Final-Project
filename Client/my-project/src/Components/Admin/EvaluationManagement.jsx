@@ -80,10 +80,10 @@ const handleAdd = async (e) => {
       console.error("❌ Delete failed:", error);
     }
   };
-
+const role = localStorage.getItem("role");
   return (
     <div className="d-flex">
-      <RoleBasedSidebar /> {/* ✅ Sidebar added */}
+      {/* <RoleBasedSidebar role={role} />  */}
 
       <div className="container mt-4">
         <h3 className="mb-4">Evaluation Criteria Management</h3>
